@@ -5,6 +5,9 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -12,3 +15,92 @@ fi
 
 # Customize to your needs...
 
+
+alias celdev='celeryd -E -B --config=celeryconfig.celeryconfig --loglevel=DEBUG'
+
+alias mrs='make reset_submodules'
+# Migrate mySQL
+alias mis='~/work4us/bin/migrate/migrate.py'
+
+alias mc='~/work4us/bin/db/mongo-console'
+alias myc='~/work4us/bin/db/mysql-console'
+
+alias s='~/work4us/symfony'
+alias msync='~/work4us/symfony mongo:sync --no-safety-check'
+
+alias tailw='tail -f ~/work4us/log/w4u_dev.log'
+alias tailall='tail -f ~/work4us/log/*.log'
+
+alias testapi="curl -v --user 159068240784310:ak42 --data '@doc/test/job_add.xml' http://api-dev.work4us.gbordiau.lab3.work4labs.com/v2/pages/159068240784310/jobs"
+
+
+function gbr()
+{
+    local usage="$0: just an alias to 'git push origin source_branch:new_branch'
+    where you specify the <source_branch> as the first argument (ex: master) and <new_branch> as 2nd arg."
+
+    if [ "$#" -ne 2 ]; then
+        echo "$usage"
+        return;
+    fi
+    git push origin $1:$2 &&
+    git co $2
+}
+
+function gbrdel()
+{
+    git push origin :$1
+    git branch -D $1
+}
+
+function gbrmaster()
+{
+    local usage="Yo Dawg, I heard you like alias, so I make an alias on an alias of 'git push origin old_br:new_br'
+        it automatically prepend your login to the new branche. first arg is the task_number, second arg is the comment"
+
+    if [ "$#" -ne 2 ]; then
+    echo "$usage"
+    return;
+    fi
+
+    gbr master `echo $(whoami)"/"$1"/"$(echo $2 | sed  -e 's/ /_/g')`
+}
+
+function gbrstaging()
+{
+    local usage="Yo Dawg, I heard you like alias, so I make an alias on an alias of 'git push origin old_br:new_br'
+        it automatically prepend your login to the new branche. first arg is the task_number, second arg is the comment"
+
+    if [ "$#" -ne 2 ]; then
+    echo "$usage"
+    return;
+    fi
+
+    gbr staging `echo $(whoami)"/"$1"/"$(echo $2 | sed  -e 's/ /_/g')`
+}
+
+function get_jira_task_from_current_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' | cut -d'/' -f 2
+}
+
+function gci() {
+    MSG="$(get_jira_task_from_current_git_branch): $1"
+    git commit -m "$MSG"
+}
+
+function gaci() {
+    MSG="$(get_jira_task_from_current_git_branch): $1"
+    git commit -am "$MSG"
+}
+
+function beer()
+{
+  echo "         _.._..,_,_"
+  echo "        (          )"
+  echo "         ]~,\"-.-~~["
+  echo "       .=])' (;  (["
+  echo "       | ]:: '    ["
+  echo "       '=]): .)  (["
+  echo "         |:: '    |"
+  echo "          ~~----~~"
+}

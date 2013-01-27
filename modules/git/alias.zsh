@@ -29,8 +29,18 @@ zstyle -s ':prezto:module:git:status:ignore' submodules '_git_status_ignore_subm
 # Git
 alias g='git'
 
+# Combos
+
+alias gclean='git checkout master && git pull && git remote prune origin && git branch --merged master | egrep  -v "(master|staging|production)$" | xargs git branch -d && git gc'
+alias gmaster2staging='git co staging && git pull && git co master && git pull && git merge staging && git push && git push origin master:staging'
+alias gmergeprod='git co production && git pull && git push && git co staging && git pull && git merge production && git push && git co master && git pull && git merge staging && git push'
+alias gmergemaster='CURR_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3-) && git co master && git pull && git co $CURR_BRANCH && git merge master && git push'
+alias gstl='git stash && git pull && git stash pop'
+alias gstp='git stash && git pull && git push && git stash pop'
+
 # Branch (b)
 alias gb='git branch'
+alias gba='git branch -r && git branch'
 alias gbc='git checkout -b'
 alias gbl='git branch -v'
 alias gbL='git branch -av'
@@ -44,6 +54,7 @@ alias gbS='git show-branch -a'
 # Commit (c)
 alias gc='git commit --verbose'
 alias gca='git commit --verbose --all'
+alias gcam='git commit --verbose --all --message'
 alias gcm='git commit --message'
 alias gco='git checkout'
 alias gcO='git checkout --patch'
@@ -69,6 +80,7 @@ alias gdi='git status --porcelain --short --ignored | sed -n "s/^!! //p"'
 alias gf='git fetch'
 alias gfc='git clone'
 alias gfm='git pull'
+alias gl='git pull'
 alias gfr='git pull --rebase'
 
 # Grep (g)
@@ -83,6 +95,8 @@ alias ggw='git grep --word-regexp'
 alias gia='git add'
 alias giA='git add --patch'
 alias giu='git add --update'
+alias gd='git diff'
+alias gdc='git diff --no-ext-diff --cached'
 alias gid='git diff --no-ext-diff --cached'
 alias giD='git diff --no-ext-diff --cached --word-diff'
 alias gir='git reset'
@@ -100,13 +114,17 @@ alias gCt='git checkout --theirs --'
 alias gCT='gCt $(gCl)'
 
 # Log (l)
-alias gl='git log --topo-order --pretty=format:${_git_log_medium_format}'
+alias glp='git log -p --follow'
 alias gls='git log --topo-order --stat --pretty=format:${_git_log_medium_format}'
 alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:${_git_log_medium_format}'
 alias glo='git log --topo-order --pretty=format:${_git_log_oneline_format}'
+alias glm='git log --topo-order --pretty=format:${_git_log_medium_format}'
 alias glg='git log --topo-order --all --graph --pretty=format:${_git_log_oneline_format}'
 alias glb='git log --topo-order --pretty=format:${_git_log_brief_format}'
 alias glc='git shortlog --summary --numbered'
+alias glnoprod="git log origin/staging --not origin/production --decorate --pretty=format:'%h;;%s;%an;%ai'"
+alias gtree="log --graph --decorate --abbrev-commit --date-order --pretty=format:'%Cgreen%h%Creset : %s%Cred%d%Creset (%Cblue%an%Creset, %Cblue%ar%Creset)'"
+alias gtree-all="log --graph --decorate --abbrev-commit --date-order --pretty=format:'%Cgreen%h%Creset : %s%Cred%d%Creset (%Cblue%an%Creset, %Cblue%ar%Creset)' --all"
 
 # Merge (m)
 alias gm='git merge'
@@ -171,6 +189,8 @@ alias gSx='git-submodule-remove'
 # Working Copy (w)
 alias gws='git status --ignore-submodules=${_git_status_ignore_submodules} --short'
 alias gwS='git status --ignore-submodules=${_git_status_ignore_submodules}'
+alias gts='git status'
+alias gt='git status --ignore-submodules=${_git_status_ignore_submodules}'
 alias gwd='git diff --no-ext-diff'
 alias gwD='git diff --no-ext-diff --word-diff'
 alias gwr='git reset --soft'
